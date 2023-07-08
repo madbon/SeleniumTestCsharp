@@ -23,74 +23,101 @@ namespace SeleniumTest
             driver.Navigate().GoToUrl("https://www.automationexercise.com/products");
             Thread.Sleep(1000);
 
+            
+
             IWebElement ele = driver.FindElement(By.Id("search_product"));
-            ele.SendKeys("dress");
-            Thread.Sleep(1000);
+
+            if (IsElementPresent(driver, By.Id("search_product")))
+            {
+                ele.SendKeys("dress");
+            }
+            
+            //Thread.Sleep(1000);
 
             IWebElement ele1 = driver.FindElement(By.Id("submit_search"));
             ele1.Click();
 
-            IReadOnlyCollection<IWebElement> sectionElements = driver.FindElements(By.TagName("section"));
+            //if (IsElementPresent(driver, By.TagName("section")))
+            //{
 
-            // Check if the list contains at least two elements
-            if (sectionElements.Count == 2)
-            {
-                // Select the second section element
-                IWebElement secondSectionElement = sectionElements.ToList()[1];
-
-                IWebElement container = secondSectionElement.FindElement(By.CssSelector(".container"));
-
-                IWebElement row = container.FindElement(By.CssSelector(".row"));
-
-                IWebElement colsm9 = row.FindElement(By.CssSelector(".col-sm-9"));
-
-                IWebElement featureElement = colsm9.FindElement(By.CssSelector(".features_items"));
-
-                IReadOnlyCollection<IWebElement> colElements = featureElement.FindElements(By.CssSelector(".col-sm-4"));
-
-                for (int i = 0; i < colElements.Count; i++)
+                IReadOnlyCollection<IWebElement> sectionElements = driver.FindElements(By.TagName("section"));
+                // Check if the list contains at least two elements
+                if (sectionElements.Count == 2)
                 {
+                    // Select the second section element
+                    IWebElement secondSectionElement = sectionElements.ToList()[1];
 
-                    IWebElement selectedCol = colElements.ToList()[i];
+                    IWebElement container = secondSectionElement.FindElement(By.CssSelector(".container"));
 
-                    Actions actions = new Actions(driver);
+                    IWebElement row = container.FindElement(By.CssSelector(".row"));
 
-                    actions.MoveToElement(selectedCol).Perform();
+                    IWebElement colsm9 = row.FindElement(By.CssSelector(".col-sm-9"));
 
-                    Thread.Sleep(TimeSpan.FromSeconds(5));
+                    IWebElement featureElement = colsm9.FindElement(By.CssSelector(".features_items"));
 
-                    IWebElement prodImageWrap = selectedCol.FindElement(By.CssSelector(".product-image-wrapper"));
+                    IReadOnlyCollection<IWebElement> colElements = featureElement.FindElements(By.CssSelector(".col-sm-4"));
 
-                    IWebElement singleProduct = prodImageWrap.FindElement(By.CssSelector(".single-products"));
+                    for (int i = 0; i < colElements.Count; i++)
+                    {
 
-                    IWebElement productOverlay = singleProduct.FindElement(By.CssSelector(".product-overlay"));
+                        IWebElement selectedCol = colElements.ToList()[i];
 
-                    IWebElement overlayContent = productOverlay.FindElement(By.CssSelector(".overlay-content"));
+                        Actions actions = new Actions(driver);
 
-                    IWebElement addToCart = overlayContent.FindElement(By.CssSelector(".btn.btn-default.add-to-cart"));
-                    addToCart.Click();
-                    Thread.Sleep(TimeSpan.FromSeconds(3));
+                        actions.MoveToElement(selectedCol).Perform();
 
-                    IWebElement cartModal = featureElement.FindElement(By.Id("cartModal"));
+                        Thread.Sleep(TimeSpan.FromSeconds(5));
 
-                    IWebElement modalDialog = cartModal.FindElement(By.CssSelector(".modal-dialog"));
+                        IWebElement prodImageWrap = selectedCol.FindElement(By.CssSelector(".product-image-wrapper"));
 
-                    IWebElement modalContent = modalDialog.FindElement(By.CssSelector(".modal-content"));
+                        IWebElement singleProduct = prodImageWrap.FindElement(By.CssSelector(".single-products"));
 
-                    IWebElement modalFooter = modalContent.FindElement(By.CssSelector(".modal-footer"));
+                        IWebElement productOverlay = singleProduct.FindElement(By.CssSelector(".product-overlay"));
 
-                    IWebElement btnContShop = modalFooter.FindElement(By.CssSelector(".btn.btn-success.close-modal"));
-                    btnContShop.Click();
-                    ////Thread.Sleep(TimeSpan.FromSeconds(3));
+                        IWebElement overlayContent = productOverlay.FindElement(By.CssSelector(".overlay-content"));
+
+                        IWebElement addToCart = overlayContent.FindElement(By.CssSelector(".btn.btn-default.add-to-cart"));
+                        addToCart.Click();
+                        Thread.Sleep(TimeSpan.FromSeconds(3));
+
+                        IWebElement cartModal = featureElement.FindElement(By.Id("cartModal"));
+
+                        IWebElement modalDialog = cartModal.FindElement(By.CssSelector(".modal-dialog"));
+
+                        IWebElement modalContent = modalDialog.FindElement(By.CssSelector(".modal-content"));
+
+                        IWebElement modalFooter = modalContent.FindElement(By.CssSelector(".modal-footer"));
+
+                        IWebElement btnContShop = modalFooter.FindElement(By.CssSelector(".btn.btn-success.close-modal"));
+                        btnContShop.Click();
+                        ////Thread.Sleep(TimeSpan.FromSeconds(3));
+
+                    }
 
                 }
-                
-            }
+            //}
+
+
 
             driver.Close();
 
             Console.Write("test case ended ");
         }
+
+        static bool IsElementPresent(IWebDriver driver, By locator)
+        {
+            try
+            {
+                IWebElement element = driver.FindElement(locator);
+                return element.Displayed;
+            }
+            catch (NoSuchElementException)
+            {
+                return false;
+            }
+
+        }
+
 
     }
 }
